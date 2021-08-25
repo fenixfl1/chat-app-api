@@ -1,8 +1,5 @@
 from sqlalchemy.sql.elements import Null
-from werkzeug.security import (
-    generate_password_hash,
-    check_password_hash
-)
+from werkzeug.security import (generate_password_hash, check_password_hash)
 from sqlalchemy import (
     Column,
     Integer,
