@@ -2,14 +2,12 @@ from datetime import datetime
 from flask import jsonify, request
 from app.database.models import User
 from app.database import db
+from . import bp_auth
 from flask_jwt_extended import (
     create_access_token,
     jwt_required,
     get_jwt_identity
 )
-from flask import Blueprint
-
-bp_auth = Blueprint('bp_auth', __name__)
 
 
 @bp_auth.post('/login')
