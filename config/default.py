@@ -6,7 +6,7 @@ APP_ROOT = dirname(dirname(abspath(__file__)))
 dotenv_path = os.path.join(APP_ROOT, '.env')
 load_dotenv(dotenv_path)
 
-SQLALCHEMY_DATABASE_URI = ''
+SQLALCHEMY_DATABASE_URI = os.getenv('JAWSDB_URL')
 
 DEBUG = False
 TESTING = False
