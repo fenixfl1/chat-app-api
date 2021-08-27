@@ -6,8 +6,6 @@ APP_ROOT = dirname(dirname(abspath(__file__)))
 dotenv_path = os.path.join(APP_ROOT, '.env')
 load_dotenv(dotenv_path)
 
-SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE')
-
 DEBUG = False
 TESTING = False
 ENV = ''
