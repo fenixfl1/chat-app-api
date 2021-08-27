@@ -1,4 +1,3 @@
-from sqlalchemy.sql.elements import Null
 from werkzeug.security import (generate_password_hash, check_password_hash)
 from sqlalchemy import (
     Column,
@@ -14,25 +13,30 @@ from flask import request
 
 
 class User(Base):
-    __tablename__ = 'user'
+    __tablename__ = 'USERS'
 
     ID = Column(Integer, primary_key=True)
     EMAIL = Column(String(100), nullable=False, unique=True)
-    FIRST_NAME = Column(String(50), nullable=False)
-    LAST_NAME = Column(String(50), nullable=False)
-    GENDER = Column(CHAR, nullable=False)
+    USERNAME = Column(String(20), nullable=False, unique=True)
+    FIRST_NAME = Column(String(50))
+    LAST_NAME = Column(String(50))
+    GENDER = Column(CHAR)
     PASSWORD = Column(String(255), nullable=False)
+    CIUNTRY = Column(String(5))
     LAST_LOGIN_AT = Column(DateTime(timezone=True))
     CURRENT_LOGIN_AT = Column(DateTime(timezone=True))
     CURRENT_LOGIN_IP = Column(String(100))
-    LOGIN_COUNT = Column(Integer)
+    LOGIN_COUNT = Column(Integer, default=0)
     IS_ACTIVE = Column(Boolean, default=True)
+    IS_ADMIN = Column(Boolean, default=False)
 
     def __init__(self, **kwargs):
         self.EMAIL = kwargs.get('EMAIL')
+        self.USERNAME = kwargs.get('USERNAME')
         self.FIRST_NAME = kwargs.get('FIRST_NAME')
         self.LAST_NAME = kwargs.get('LAST_NAME')
         self.GENDER = kwargs.get('GENDER')
+        self.IS_ADMIN = kwargs.get('IS_ADMIN')
         self.PASSWORD = self.set_password(kwargs.get('PASSWORD'))
 
     def __repr__(self):
@@ -43,12 +47,16 @@ class User(Base):
         return User.query.filter_by(EMAIL=email).first()
 
     @staticmethod
+    def get_by_username(username: str) -> 'User':
+        return User.query.filter_by(USERNAME=username).first()
+
+    @staticmethod
     def get_by_id(id: int) -> 'User':
         return User.query.get(id)
 
     def refresh_login_info(self) -> None:
         engine.execute(f"""
-            UPDATE user SET LOGIN_COUNT = '{self.LOGIN_COUNT + 1}',  
+            UPDATE USERS SET LOGIN_COUNT = '{self.LOGIN_COUNT + 1}',
             CURRENT_LOGIN_IP = '{request.remote_addr}',
             CURRENT_LOGIN_AT = '{datetime.now()}',
             LAST_LOGIN_AT = '{datetime.now()}'
@@ -57,7 +65,7 @@ class User(Base):
 
     def reresh_logout_info(self):
         engine.execute(f"""
-            UPDATE user SET LAST_LOGIN_AT = {None},
+            UPDATE USERS SET LAST_LOGIN_AT = {None},
             CURRENT_LOGIN_IP = '{None}'
             WHERE ID = {self.ID}          
         """)
