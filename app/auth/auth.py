@@ -1,16 +1,31 @@
 from datetime import datetime
 from flask import jsonify, request
+from flask.helpers import make_response
 from app.database.models import User
 from app.database import db
 from . import bp_auth
 from flask_jwt_extended import (create_access_token, jwt_required,
                                 get_jwt_identity)
 
-# @bp_auth.after_request
-# def after_request(response):
-#     header = response.headers
-#     header['Access-Control-Allow-Origin'] = '*'
-#     return response
+
+@bp_auth.after_request
+def after_request(response):
+    origin = request.headers.get('Origin')
+
+    if request.method == 'OPTIONS':
+        response = make_response()
+        response.headers.add('Access-Control-Allow-Credentials', 'true')
+        response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
+        response.headers.add('Access-Control-Allow-Headers', 'x-csrf-token')
+        response.headers.add('Access-Control-Allow-Methods',
+                             'GET, POST, OPTIONS, PUT, PATCH, DELETE')
+        if origin:
+            response.headers.add('Access-Control-Allow-Origin', origin)
+    else:
+        response.headers.add('Access-Control-Allow-Credentials', 'true')
+        if origin:
+            response.headers.add('Access-Control-Allow-Origin', origin)
+    return response
 
 
 @bp_auth.post('/login')
