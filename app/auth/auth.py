@@ -8,6 +8,13 @@ from flask_jwt_extended import (create_access_token, jwt_required,
                                 get_jwt_identity)
 
 
+@bp_auth.after_request
+def after_request(response):
+    header = response.headers
+    header['Access-Control-Allow-Origin'] = '*'
+    return response
+
+
 @bp_auth.post('/login')
 @cross_origin
 def login():
