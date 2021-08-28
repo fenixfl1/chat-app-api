@@ -9,6 +9,8 @@ load_dotenv(dotenv_path)
 SQLALCHEMY_DATABASE_URI = os.getenv('JAWSDB_URL')
 SQLALCHEMY_TRACK_MODIFICATION = False
 
+CORS_HEADERS = 'Content-Type'
+
 DEBUG = False
 TESTING = False
 ENV = ''

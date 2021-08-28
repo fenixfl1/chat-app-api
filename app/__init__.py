@@ -17,7 +17,7 @@ def create_app(settings_module: str) -> Flask:
     jwt.init_app(app)
     adm.init_app(app)
     sql.init_app(app)
-    cors.init_app(app)
+    cors.init_app(app, esource={r"/*": {"origins": "*"}})
     migrate.init_app(app, sql)
     socketio.init_app(app, cors_allowed_origins="*")
 
