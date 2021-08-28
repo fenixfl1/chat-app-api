@@ -1,5 +1,4 @@
 from datetime import datetime
-from flask_cors import cross_origin
 from flask import jsonify, request
 from app.database.models import User
 from app.database import db
@@ -7,16 +6,14 @@ from . import bp_auth
 from flask_jwt_extended import (create_access_token, jwt_required,
                                 get_jwt_identity)
 
-
-@bp_auth.after_request
-def after_request(response):
-    header = response.headers
-    header['Access-Control-Allow-Origin'] = '*'
-    return response
+# @bp_auth.after_request
+# def after_request(response):
+#     header = response.headers
+#     header['Access-Control-Allow-Origin'] = '*'
+#     return response
 
 
 @bp_auth.post('/login')
-@cross_origin
 def login():
 
     data = request.get_json()
@@ -49,7 +46,6 @@ def login():
 
 @bp_auth.get('/logout')
 @jwt_required()
-@cross_origin
 def logout():
     user = User.get_by_id(get_jwt_identity())
     user.reresh_logout_info()
@@ -57,7 +53,6 @@ def logout():
 
 
 @bp_auth.post('/register_user')
-@cross_origin
 def create_user():
     DATA_REQUIRED: dict = [
         'EMAIL', 'PASSWORD', 'FIRST_NAME', 'LAST_NAME', 'GENDER'
