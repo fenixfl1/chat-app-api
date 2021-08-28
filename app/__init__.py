@@ -1,5 +1,5 @@
 from flask import Flask
-from .ext import socketio, jwt, adm, migrate, sql
+from .ext import socketio, jwt, adm, migrate, sql, cors
 from .admin.admin import MyAdminIndexView
 
 
@@ -17,6 +17,7 @@ def create_app(settings_module: str) -> Flask:
     jwt.init_app(app)
     adm.init_app(app)
     sql.init_app(app)
+    cors.init_app(app)
     migrate.init_app(app, sql)
     socketio.init_app(app, cors_allowed_origins="*")
 
