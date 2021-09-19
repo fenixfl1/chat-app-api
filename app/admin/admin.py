@@ -1,7 +1,7 @@
 from . import bp_adm
 from app.ext import adm
 from app.database import db
-from app.database.models import User
+from app.database.models import Messages, Rooms, User
 from flask_admin.contrib.sqla import ModelView
 from flask_jwt_extended import current_user, jwt_required
 from flask import redirect, url_for, jsonify
@@ -9,11 +9,11 @@ from flask_admin import AdminIndexView, expose
 
 
 class AdminView(ModelView):
-    create_modal = True
-    edit_modal = True
+    # create_modal = True
+    # edit_modal = True
     can_view_details = True
 
-    @jwt_required()
+    # @jwt_required()
     def is_accessible(self):
         return True
 
@@ -42,3 +42,5 @@ def inaccessible():
 
 
 adm.add_view(UserView(User, db))
+adm.add_view(AdminView(Rooms, db))
+adm.add_view(AdminView(Messages, db))
